@@ -19,9 +19,9 @@ ENV NODEJS_VERSION=8 \
     CHROME_BIN=/bin/google-chrome
 
 COPY contrib/bin/scl_enable /usr/local/bin/scl_enable
-ADD https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm google-chrome-stable_current_x86_64.rpm
+ADD http://orion.lcg.ufrj.br/RPMS/myrpms/google/google-chrome-stable-69.0.3497.100-1.x86_64.rpm google-chrome-stable_current_x86_64.rpm
 
-RUN INSTALL_PKGS="rh-nodejs${NODEJS_VERSION} rh-nodejs${NODEJS_VERSION}-npm rh-nodejs${NODEJS_VERSION}-nodejs-nodemon nss_wrapper redhat-lsb libXScrnSaver xdg-utils liberation-fonts" && \
+RUN INSTALL_PKGS="rh-nodejs${NODEJS_VERSION} rh-nodejs${NODEJS_VERSION}-npm rh-nodejs${NODEJS_VERSION}-nodejs-nodemon nss_wrapper redhat-lsb libXScrnSaver xdg-utils" && \
     yum install -y --setopt=tsflags=nodocs \
       --disablerepo=* \
       --enablerepo=rhel-7-server-rpms \
