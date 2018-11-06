@@ -1,6 +1,8 @@
-FROM openshift/jenkins-slave-base-centos7
+FROM openshift/jenkins-slave-maven-centos7
 
 ENV GRADLE_VERSION=4.8
+
+USER root
 
 RUN curl -skL -o /tmp/gradle-bin.zip https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
     mkdir -p /opt/gradle && \
@@ -9,5 +11,8 @@ RUN curl -skL -o /tmp/gradle-bin.zip https://services.gradle.org/distributions/g
     rm -f /tmp/gradle-bin.zip && \
     chown -R 1001:0 /opt/gradle && \
     chmod -R g+rw /opt/gradle
+
+ENV GRADLE_USER_HOME=/opt/gradle
+ADD gradle.properties $GRADLE_USER_HOME/gradle.properties
 
 USER 1001
