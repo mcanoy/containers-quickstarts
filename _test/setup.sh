@@ -50,7 +50,7 @@ test() {
   echo "Waiting for all builds to start..."
   while [[ "$(get_build_phases "New")" -ne 0 || $(get_build_phases "Pending") -ne 0 ]]; do
     echo -ne "New Builds: $(get_build_phases "New"), Pending Builds: $(get_build_phases "Pending")$([ "$TRAVIS" != "true" ] && echo "\r" || echo "\n")"
-    sleep 1
+    sleep 15
   done
 
   echo "Waiting for all builds to complete..."
