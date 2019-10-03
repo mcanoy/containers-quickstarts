@@ -52,6 +52,7 @@ test() {
     echo -ne "New Builds: $(get_build_phases "New"), Pending Builds: $(get_build_phases "Pending")$([ "$TRAVIS" != "true" ] && echo "\r" || echo "\n")"
     retry 5 oc get builds -n ${NAMESPACE}
     sleep 15
+    oc get bc jenkins-slave-python -o yaml
   done
 
   echo "Waiting for all builds to complete..."
@@ -73,7 +74,7 @@ test() {
 
 get_build_phases() {
   phase=$1
-  result=$(retry 5 oc get builds -o jsonpath="{.items[?(@.status.phase==\"${phase}\")].metadata.name}" -n $NAMESPACE) || kill -s TERM $TOP_PID
+  result=$(retry 5 oc get builds -o jsonpath="{.items[?(@.status.phase==\"${phase}\")].metadata.name}" -n $NAMESPACE) || echo  "killing" && kill -s TERM $TOP_PID
   echo ${result} | wc -w
 }
 
