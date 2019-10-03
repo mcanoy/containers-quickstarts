@@ -50,19 +50,21 @@ test() {
   echo "Waiting for all builds to start..."
   while [[ "$(get_build_phases "New")" -ne 0 || $(get_build_phases "Pending") -ne 0 ]]; do
     echo -ne "New Builds: $(get_build_phases "New"), Pending Builds: $(get_build_phases "Pending")$([ "$TRAVIS" != "true" ] && echo "\r" || echo "\n")"
+    retry 5 oc get builds -n ${NAMESPACE}
     sleep 15
   done
 
   echo "Waiting for all builds to complete..."
   while [ $(get_build_phases "Running") -ne 0 ]; do
     echo -ne "Running Builds: $(get_build_phases "Running")$([ "$TRAVIS" != "true" ] && echo "\r" || echo "\n")"
-    sleep 1
+    retry 5 oc get builds -n ${NAMESPACE}
+    sleep 5
   done
 
   echo "Check to see how many builds Failed"
   if [ $(get_build_phases "Failed") -ne 0 ]; then
     echo "Some builds failed. Printing Report"
-    retry 5 oc get builds -n $NAMESPACE -o custom-columns=NAME:.metadata.name,TYPE:.spec.strategy.type,FROM:.spec.source.type,STATUS:.status.phase,REASON:.status.reason
+    retry 5 oc get builds -n ${NAMESPACE} -o custom-columns=NAME:.metadata.name,TYPE:.spec.strategy.type,FROM:.spec.source.type,STATUS:.status.phase,REASON:.status.reason,STARTED:.status.startTimestamp,COMPLETED:.status.completionTimestamp
     exit 1
   fi
 
